@@ -58,6 +58,7 @@
             }
 .tab-item a.active{
   color:red;
+  font-weight: bold;
 }
 
 </style>
