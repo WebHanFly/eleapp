@@ -9,13 +9,17 @@
   				</div>
   			</div>
   			<div class="price">
-  				￥16
+  				￥{{totalPrice}}
   			</div>
   			<div class="desc">
-  			另需配送费￥元
+  			另需配送费￥{{deliveryPrice}}元
   			</div>
   		</div>
-  		<div class="content right"></div>
+  		<div class="content-right">
+  			<div class="pay">
+  				￥{{minPrice}}元起送
+  			</div>
+  		</div>
   	</div>
 </div>
 
@@ -23,7 +27,38 @@
 
 
 <script type = "text/ecmascript-6">
-	export default {}
+	export default {
+		props: {
+			selectFoods: {
+				type: Array,
+				default() {
+					return [
+						{
+							price:20,
+							count:5
+						}
+					];
+				}
+			},
+			deliveryPrice: {
+				type: Number,
+				default: 0
+			},
+			minPrice: {
+				type: Number,
+				default: 0
+			}
+		},
+		computed: {
+			totalPrice() {
+				let total = 0;
+				this.selectFoods.forEach((food) => {
+					total += food.price * food.count;
+				})
+				return total;
+			}
+		}
+	}
 </script>
 
 
@@ -38,9 +73,11 @@
 .shopcart .content .content-left .logo-wrapper .logo {width: 100%;height: 100%;border-radius: 50%;background: #2b343c;text-align: center;}
 .shopcart .content .content-left .logo-wrapper .logo .icon-shopping_cart {font-size: 24px;color: #80858a;line-height: 44px;}
 .shopcart .content .content-left .price{display: inline-block;vertical-align: top;line-height: 24px;margin-top: 12px;box-sizing: border-box;padding-right: 12px;border-right: 1px solid rgba(255,255,255,0.2);font-size: 16px;font-weight: 700;color: rgba(255,255,255,0.5);}
-.shopcart .content .content-left .desc{display: inline-block;font-size: 16px;font-weight: 700;color: rgba(255,255,255,0.5);vertical-align: top;margin: 12px 0 0 12px;}
+.shopcart .content .content-left .desc{display: inline-block;font-size: 12px;font-weight: 700;color: rgba(255,255,255,0.5);vertical-align: top;margin: 18px 0 0 12px;}
 .shopcart .content .content-right{
 	flex: 0 0 105px;
 	width: 105px;
+	background: #2b333b;
 }
+.shopcart .content .content-right .pay{font-size: 12px;height: 48px;line-height: 48px;color: #80858a;font-weight: 900;text-align: center;}
 </style>

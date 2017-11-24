@@ -1,6 +1,7 @@
 <template>
 
 <div class="goods">
+
   	<div class="menu-wrapper"  ref="menuWrapper"> <!--  -->
   		<ul>
   			<li v-for="(item,index) in goods" class="menu-item" :class="{'current':currentIndex === index}" @click="selectMenu(index,$event)">
@@ -39,8 +40,8 @@
   			</li>
   		</ul>
   	</div>
-
-  	<shopcart></shopcart> <!-- shopcart components组件 --> <!-- 传递配送费参数 -->
+	
+  	<shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart> <!-- shopcart components组件 --> <!-- 传递配送费参数 -->
 </div>
 
 </template>
@@ -51,7 +52,7 @@ import BScroll  from "better-scroll";
 import shopcart from "../../components/shopcart/shopcart";
 const ERR_OK = 0;
 	export default {
-		prop: {
+		props: {
 			seller: {
 				type: Object
 			}

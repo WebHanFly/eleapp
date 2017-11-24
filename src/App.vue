@@ -13,7 +13,7 @@
             </div>
               
         </div>
-        <router-view></router-view>
+        <router-view :seller="seller"></router-view> <!-- 传递数据 -->
     </div>
 </template>
 <script type = "text/ecmascript-6">
