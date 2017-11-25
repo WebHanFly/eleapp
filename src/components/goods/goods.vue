@@ -34,6 +34,10 @@
 								<span class="now">￥{{food.price}}</span>
 								<span v-show="food.oldPrice" class="old">￥{{food.oldPrice}}</span>
 							</div>
+							<!-- 引入“+ cartcontrol-”组件 -->
+							<div class="cartcontrol-wrapper">
+								<cartcontrol :food="food"></cartcontrol>
+							</div>
 						</div>
   					</li>
   				</ul>
@@ -50,6 +54,7 @@
 <script type = "text/ecmascript-6">
 import BScroll  from "better-scroll";
 import shopcart from "../../components/shopcart/shopcart";
+import cartcontrol from "../../components/cartcontroll/cartcontroll";
 const ERR_OK = 0;
 	export default {
 		props: {
@@ -101,7 +106,8 @@ const ERR_OK = 0;
 					click:true
 				})
 				this.foodsScroll = new BScroll(this.$refs.foodsWrapper,{
-					probeType:3
+					probeType:3,
+					click:true   //better-scroll点击事件开启，PC会算两侧，要传递event事件
 				}),
 				this.foodsScroll.on('scroll',(pos)=>{
 					this.scrollY = Math.abs(Math.round(pos.y));   //7-7节
@@ -134,7 +140,8 @@ const ERR_OK = 0;
 			}
 		},
 		components: {
-			shopcart
+			shopcart,
+			cartcontrol
 		}
 	}
 </script>
@@ -213,7 +220,7 @@ height: 26px;line-height: 26px;border-left:2px solid #d9dde1;font-size: 12px;col
 .foods-wrapper .food-item:last-child{border-bottom:none;margin-bottom: 0;}
 .foods-wrapper .food-item .icon {flex:0 0 57px;
 margin-right: 10px;}
-.foods-wrapper .food-item .content {flex: 1;}
+.foods-wrapper .food-item .content {flex: 1;position: relative;}
 .foods-wrapper .food-item .content .name {margin: 2px 0 8px 0; height: 14px; line-height: 14px; font-size: 14px; font-weight: 700; color: rgb(7,17,27)}
 .foods-wrapper .food-item .content .desc,.extra{
 	
@@ -241,4 +248,5 @@ margin-right: 10px;}
 	font-size: 14px;
 	color: rgb(240,20,20);
 }
+.foods-wrapper .food-item .content .cartcontrol-wrapper {position: absolute;bottom: -10px;right: 0;}
 </style>
