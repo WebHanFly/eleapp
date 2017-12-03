@@ -19,7 +19,7 @@
   				<h1 class="title">{{item.name}}</h1>
   				<ul>
   					<li v-for="(food, index) in item.foods" class="food-item" >
-  						
+  						<!-- {{food.name+food.count}} -->
   						<div class="icon">
   							<img :src="food.icon" alt="" width="57">
   						</div>
@@ -36,8 +36,9 @@
 							</div>
 							<!-- 引入“+ cartcontrol-”组件 -->
 							<div class="cartcontrol-wrapper">
-								<cartcontrol :food="food"></cartcontrol>
+								<cartcontrol :food="food"></cartcontrol>  <!-- 通过子组件改变了父级的对象的属性，增加了food.count属性 -->
 							</div>
+							
 						</div>
   					</li>
   				</ul>
@@ -45,7 +46,7 @@
   		</ul>
   	</div>
 	
-  	<shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart> <!-- shopcart components组件 --> <!-- 传递配送费参数 -->
+  	<shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart> <!-- shopcart components组件 --> <!-- 传递配送费参数 -->
 </div>
 
 </template>
@@ -80,6 +81,7 @@ const ERR_OK = 0;
 					this.$nextTick(()=>{  //初始化dom之前需要计算高度
 						this._initScroll();
 						this._calculateHeight();
+						// this.selectFoods();
 					})
 					
 				}
@@ -97,8 +99,22 @@ const ERR_OK = 0;
 					}
 				}
 				return 0;
+			},
+			selectFoods() {
+				let foods = [];
+				this.goods.forEach((good)=>{   //遍历goods下的foods，有count属性，点击cartcontroll组件会使foods.count +1;
+					// console.log(good.foods);
+					good.foods.forEach((food)=>{
+						  // console.log(food);//所有商品的食物对象的数量。
+						if(food.count>=0){
+						foods.push(food)
+						}
+					});
+				});
+				return foods; 
 			}
 		},
+
 		methods: {
 			
 			_initScroll() {
@@ -106,7 +122,7 @@ const ERR_OK = 0;
 					click:true
 				})
 				this.foodsScroll = new BScroll(this.$refs.foodsWrapper,{
-					probeType:3,
+					// probeType:3,
 					click:true   //better-scroll点击事件开启，PC会算两侧，要传递event事件
 				}),
 				this.foodsScroll.on('scroll',(pos)=>{
@@ -137,7 +153,8 @@ const ERR_OK = 0;
 				let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
 				let el = foodList[index];
 				this.foodsScroll.scrollToElement(el,300);//滚动到index的位置。
-			}
+			},
+
 		},
 		components: {
 			shopcart,

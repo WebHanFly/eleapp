@@ -1,7 +1,7 @@
 <template>
 
 <div class="shopcart">
-  	<div class="content">
+  	<div class="content" @click="toggleList">
   		<div class="content-left">
   			<div class="logo-wrapper">
   				<div class="logo" :class="{'highlight':totalCount>0}">
@@ -22,21 +22,42 @@
   			</div> <!-- 绑定一个计算属性 -->
   		</div>
   	</div>
+  	<div class="ball"></div>  <!-- 动画球效果 -->
+  	<transition name="fold">
+	<div class="shopcart-list" v-show="listShow">
+		<div class="list-header">
+			<div class="title">购物车</div>
+			<sapn class="empty">清空</sapn>
+		</div>
+		<div class="list-content">
+			<ul>
+				<li class="food" v-for="(food,index) in selectFoods" v-show="food.count>0">
+					<!-- {{food}} -->
+					<span class="name">{{food.name}}</span>
+					<div class="price">
+						<span>￥{{food.price*food.count}}</span>
+					</div>
+					<div class="cartcontrol-wrapper">
+						<cartcontrol :food="food"></cartcontrol>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>	
+	</transition>					
 </div>
 
 </template>
 
 
 <script type = "text/ecmascript-6">
+import cartcontrol from "../../components/cartcontroll/cartcontroll";
 	export default {
 		props: {
 			selectFoods: {
 				type: Array,
 				default() {
-					return [{
-						price:2,
-						count:5
-					}];
+					return [];
 				}
 			},
 			deliveryPrice: {
@@ -46,7 +67,14 @@
 			minPrice: {
 				type: Number,
 				default: 0
+			},
+			
+		},
+		data() {
+			return {
+				fold: true
 			}
+			
 		},
 		computed: {
 			totalPrice() {
@@ -79,6 +107,25 @@
 				}else{
 					return 'enough';
 				}
+			},
+			listShow() {
+				if(!this.totalCount){
+					this.fold = true;
+					return false;
+				}
+				let show = !this.fold;
+				return show;
+			}
+		},
+		components: {
+			cartcontrol
+		},
+		methods: {
+			toggleList() {
+				if(!this.totalCount){
+					return;
+				}
+				this.fold = !this.fold;
 			}
 		}
 	}
@@ -120,4 +167,22 @@
 .shopcart .content .content-right .pay{font-size: 12px;height: 48px;line-height: 48px;color: #80858a;font-weight: 900;text-align: center;}
 .shopcart .content .content-right .not-enough{background: #2b333b;}
 .shopcart .content .content-right .enough {background: #00b43c;color: #fff;}
+
+
+.shopcart .shopcart-list {position: absolute;z-index: -1;width: 100%;left: 0;transform: translate3d(0,-100%,0);top: 0%;}
+
+
+
+.shopcart .fold-enter-active{transition: all 0.5s;}
+.shopcart .fold-leave-active{transition: all 0.5s;}
+.shopcart .fold-enter, .fold-leave-to{transform: translate3d(0,0,0);}
+/*.shopcart .fold-enter-to, .fold-leave-to{-webkit-transform:  translate3d(0,0,0);transform: translate3d(0,0,0);}*/
+/*.shopcart   .fold-leave-to  {-webkit-transform:  translate(0,-100%);transform: translate(0,-100%);}*/
+
+
+
+.shopcart .shopcart-list .list-header {height: 40px;line-height: 40px;padding: 0 18px;background-color: #f3f5f7;border-bottom: 1px solid rgba(7,17,27,0.1);}
+.shopcart .shopcart-list .list-header .title {float: left;font-size: 14px;color: rgb(7,17,27)}
+.shopcart .shopcart-list .list-header .empty {float: right;font-size: 12px;color: rgb(0,160,220);}
+.shopcart .shopcart-list .list-content {padding: 0 18px;max-height: 217px;background-color: #fff;overflow: hidden;}
 </style>

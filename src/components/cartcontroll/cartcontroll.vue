@@ -23,7 +23,8 @@ import Vue from "Vue";   //来检测count的数量的额改变及时渲染dom
 			}
 		},
 		created() {
-			// console.log(this.food);
+			// 
+			// .log(this.food);
 		},
 		// computed() {
 
@@ -77,7 +78,7 @@ import Vue from "Vue";   //来检测count的数量的额改变及时渲染dom
 .cartcontrol .fade-enter-active, .fade-leave-active{
   transition: all 0.3s ease ;transform:translate3d(0,0,0);background: #fff;
 }
-.cartcontrol .fade-enter, .fade-leave-active{
+.cartcontrol .fade-enter, .fade-leave{
   transform: translate3d(24px ,0 ,0);background: #fff;
 }
 .cartcontrol .cart-decreace .fade-enter-active, .fade-leave-active .inner{transition: all 0.3s ease;transform:rotate(0);}
