@@ -1,12 +1,14 @@
 <template>
 
 <div class="cartcontrol">
-	<transition name="fade">
-		<div class="cart-decreace" v-show="calculate()" @click="decrease">
-			<span class="inner"><i>-</i></span>
+	
+		<div class="cart-decreace"  @click="decrease">
+			<transition name="fade">
+				<div class="inner" v-show="calculate"><i>-</i></div>
+			</transition>
 		</div>
-	</transition>
-	<div class="cartcount" v-show="calculate()">{{food.count}}</div>
+	
+	<div class="cartcount" v-show="calculate">{{food.count}}</div>
 
 	<div class="cart-add" @click="addCart"><span><i>+</i></span></div>
 </div>
@@ -26,9 +28,11 @@ import Vue from "Vue";   //来检测count的数量的额改变及时渲染dom
 			// 
 			// .log(this.food);
 		},
-		// computed() {
-
-		// },
+		computed: {
+			calculate() {
+				return this.food.count;
+			}
+		},
 		methods: {
 			addCart(event) {
 				if(!event._constructed){
@@ -60,10 +64,7 @@ import Vue from "Vue";   //来检测count的数量的额改变及时渲染dom
 				}
 				// console.log(this.food.count);
 			},
-			calculate() {
-				return this.food.count;
-			}
-
+			
 		}
 	}
 </script>
@@ -73,16 +74,17 @@ import Vue from "Vue";   //来检测count的数量的额改变及时渲染dom
 .cartcontrol {font-size: 0}
 
 .cartcontrol .cart-decreace{font-size: 24px;line-height: 24px;padding: 2px;display: inline-block;}
-.cartcontrol .cart-decreace span {border: 1px solid rgb(0,160,220);display: inline-block;width: 16px;height: 16px;border-radius: 50%;background:#fff; }
-.cartcontrol .cart-decreace span i {position: relative;top: -6px;right: -3px;color: rgb(0,160,220);}
-.cartcontrol .fade-enter-active, .fade-leave-active{
-  transition: all 0.3s ease ;transform:translate3d(0,0,0);background: #fff;
-}
-.cartcontrol .fade-enter, .fade-leave{
-  transform: translate3d(24px ,0 ,0);background: #fff;
-}
-.cartcontrol .cart-decreace .fade-enter-active, .fade-leave-active .inner{transition: all 0.3s ease;transform:rotate(0);}
-.cartcontrol .cart-decreace .fade-enter, .fade-leave-active .inner{transform:rotate(180);} 
+.cartcontrol .cart-decreace .inner {border: 1px solid rgb(0,160,220);width: 16px;height: 16px;border-radius: 50%; transform: rotate(180deg);background: #fff;opacity: 1;}
+.cartcontrol .cart-decreace .inner i {position: relative;top: -6px;right: -3px;color: rgb(0,160,220);}
+
+/*旋转效果*/
+.cartcontrol .fade-enter-active{transition: all 0.4s; }
+.cartcontrol .fade-leave-active{transition: all 0.4s; }
+.cartcontrol .cart-decreace .fade-enter {transform:rotate(0deg);opacity: 0;transform: translateX(60px);} 
+.cartcontrol .cart-decreace .fade-leave-to {transform:rotate(0deg);opacity: 0;transform: translateX(26px);}
+
+
+
 .cartcontrol .cartcount {display: inline-block;vertical-align: top;width: 12px;padding: 4px 10px 0 10px;line-height: 24px;text-align: center;font-size: 16px;}
 .cartcontrol .cart-add {font-size: 24px;line-height: 24px;padding: 6px;color: rgb(0,160,220);display: inline-block;}
 .cartcontrol .cart-add span {border: 1px solid rgb(0,160,220);display: inline-block;width: 16px;height: 16px;border-radius: 50%;background:rgb(0,160,220) }

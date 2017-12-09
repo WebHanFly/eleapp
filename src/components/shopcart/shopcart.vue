@@ -34,7 +34,7 @@
 				<li class="food" v-for="(food,index) in selectFoods" v-show="food.count>0">
 					<!-- {{food}} -->
 					<span class="name">{{food.name}}</span>
-					<div class="price">
+					<div class="price" style="font-weight: 700">
 						<span>￥{{food.price*food.count}}</span>
 					</div>
 					<div class="cartcontrol-wrapper">
@@ -169,13 +169,12 @@ import cartcontrol from "../../components/cartcontroll/cartcontroll";
 .shopcart .content .content-right .enough {background: #00b43c;color: #fff;}
 
 
-.shopcart .shopcart-list {position: absolute;z-index: -1;width: 100%;left: 0;transform: translate3d(0,-100%,0);top: 0%;}
-
-
-
+.shopcart .shopcart-list {position: absolute;z-index: -1;width: 100%;left: 0;transform: translate3d(0,-100%,0);top: 0;}
+/*购物车渐入渐出效果*/
 .shopcart .fold-enter-active{transition: all 0.5s;}
-.shopcart .fold-leave-active{transition: all 0.5s;}
-.shopcart .fold-enter, .fold-leave-to{transform: translate3d(0,0,0);}
+.shopcart .fold-leave-active{transition: all 3.3s;}
+.shopcart .fold-enter{transform: translate3d(0,0,0);}
+.shopcart .fold-leave-to{transform: translate3d(0,0,0);}
 /*.shopcart .fold-enter-to, .fold-leave-to{-webkit-transform:  translate3d(0,0,0);transform: translate3d(0,0,0);}*/
 /*.shopcart   .fold-leave-to  {-webkit-transform:  translate(0,-100%);transform: translate(0,-100%);}*/
 
@@ -185,4 +184,10 @@ import cartcontrol from "../../components/cartcontroll/cartcontroll";
 .shopcart .shopcart-list .list-header .title {float: left;font-size: 14px;color: rgb(7,17,27)}
 .shopcart .shopcart-list .list-header .empty {float: right;font-size: 12px;color: rgb(0,160,220);}
 .shopcart .shopcart-list .list-content {padding: 0 18px;max-height: 217px;background-color: #fff;overflow: hidden;}
+.shopcart .shopcart-list .list-content .food {position: relative;padding: 12px 0;box-sizing: border-box;border-bottom: 1px solid rgba(7,17,27,0.1)}
+.shopcart .shopcart-list .list-content .name {line-height: 24px;font-size: 14px;color: rgb(7,17,27)}
+.shopcart .shopcart-list .list-content  .food .price {position: absolute;right: 100px;bottom: 12px;line-height: 24px;font-size: 14px;color: red;font-weight: 700 !important;}
+.shopcart .shopcart-list .list-content .cartcontrol-wrapper {
+	position: absolute;right: 0;bottom: 0px;
+}
 </style>
