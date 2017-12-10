@@ -2,15 +2,15 @@
 
 <div class="cartcontrol">
 	
-		<div class="cart-decreace"  @click="decrease">
+		<div class="cart-decreace"  @click.stop.prevent="decrease"> <!-- 阻止点击事件的冒泡 -->
 			<transition name="fade">
-				<div class="inner" v-show="calculate"><i>-</i></div>
+				<div class="inner" v-show="calculate()"><i>-</i></div>
 			</transition>
 		</div>
 	
-	<div class="cartcount" v-show="calculate">{{food.count}}</div>
+	<div class="cartcount" v-show="calculate()">{{food.count}}</div>
 
-	<div class="cart-add" @click="addCart"><span><i>+</i></span></div>
+	<div class="cart-add" @click.stop.prevent="addCart"><span><i>+</i></span></div>
 </div>
 
 </template>
@@ -28,11 +28,11 @@ import Vue from "Vue";   //来检测count的数量的额改变及时渲染dom
 			// 
 			// .log(this.food);
 		},
-		computed: {
-			calculate() {
-				return this.food.count;
-			}
-		},
+		// computed: {
+		// 	calculate() {
+		// 		return this.food.count;
+		// 	}
+		// },
 		methods: {
 			addCart(event) {
 				if(!event._constructed){
@@ -64,6 +64,9 @@ import Vue from "Vue";   //来检测count的数量的额改变及时渲染dom
 				}
 				// console.log(this.food.count);
 			},
+				calculate() {
+				return this.food.count;
+			}
 			
 		}
 	}

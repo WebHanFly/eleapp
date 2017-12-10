@@ -18,7 +18,7 @@
   			<li v-for="item in goods" class="food-list food-list-hook">
   				<h1 class="title">{{item.name}}</h1>
   				<ul>
-  					<li v-for="(food, index) in item.foods" class="food-item" >
+  					<li @click="selectFood(food,$event)" v-for="(food, index) in item.foods" class="food-item" >
   						<!-- {{food.name+food.count}} -->
   						<div class="icon">
   							<img :src="food.icon" alt="" width="57">
@@ -46,15 +46,18 @@
   		</ul>
   	</div>
 	
-  	<shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart> <!-- shopcart components组件 --> <!-- 传递配送费参数 -->
+  	<shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice">
+  	</shopcart> <!-- shopcart components组件 --> <!-- 传递配送费参数 -->
+  	<food :food="selectedFood" ref="food"></food>
 </div>
-
+	
 </template>
 
 
 <script type = "text/ecmascript-6">
 import BScroll  from "better-scroll";
 import shopcart from "../../components/shopcart/shopcart";
+import food from "../../components/food/food";
 import cartcontrol from "../../components/cartcontroll/cartcontroll";
 const ERR_OK = 0;
 	export default {
@@ -67,7 +70,8 @@ const ERR_OK = 0;
 			return {
 				goods:[],
 				listHeight: [],
-				scrollY: 0
+				scrollY: 0,
+				selectedFood: {}
 			}
 		},
 
@@ -154,11 +158,20 @@ const ERR_OK = 0;
 				let el = foodList[index];
 				this.foodsScroll.scrollToElement(el,300);//滚动到index的位置。
 			},
+			selectFood(food,event) {
+				if(!event._constructed){
+					return false;
+				}
+				this.selectedFood = food;
+				// console.log(this.$refs.food);
+				this.$refs.food.show();
+			}
 
 		},
 		components: {
 			shopcart,
-			cartcontrol
+			cartcontrol,
+			food
 		}
 	}
 </script>
@@ -261,9 +274,10 @@ margin-right: 10px;}
 	color: rgb(240,20,20);
 }
 .foods-wrapper .food-item .content .price .old{
+	text-decoration: line-through;
 	margin-right: 8px;
-	font-size: 14px;
-	color: rgb(240,20,20);
+	font-size: 10px;
+	color: rgb(147,153,159);
 }
 .foods-wrapper .food-item .content .cartcontrol-wrapper {position: absolute;bottom: -10px;right: 0;}
 </style>

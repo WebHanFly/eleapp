@@ -1,5 +1,6 @@
 <template>
 
+
 <div class="shopcart">
   	<div class="content" @click="toggleList">
   		<div class="content-left">
@@ -16,41 +17,48 @@
   			另需配送费￥{{deliveryPrice}}元
   			</div>
   		</div>
-  		<div class="content-right">
+  		<div class="content-right" @click.stop.prevent="pay()">
   			<div class="pay" :class="payClass">
   				{{payDesc}}
   			</div> <!-- 绑定一个计算属性 -->
   		</div>
   	</div>
   	<div class="ball"></div>  <!-- 动画球效果 -->
+  	<transition name="blur">
+		<div class="list-mask" v-show="listShow" @click="hideList()"></div>
+	</transition>
   	<transition name="fold">
-	<div class="shopcart-list" v-show="listShow">
-		<div class="list-header">
-			<div class="title">购物车</div>
-			<sapn class="empty">清空</sapn>
-		</div>
-		<div class="list-content">
-			<ul>
-				<li class="food" v-for="(food,index) in selectFoods" v-show="food.count>0">
-					<!-- {{food}} -->
-					<span class="name">{{food.name}}</span>
-					<div class="price" style="font-weight: 700">
-						<span>￥{{food.price*food.count}}</span>
-					</div>
-					<div class="cartcontrol-wrapper">
-						<cartcontrol :food="food"></cartcontrol>
-					</div>
-				</li>
-			</ul>
-		</div>
+		<div class="shopcart-list" v-show="listShow">
+			<div class="list-header">
+				<div class="title">购物车</div>
+				<sapn class="empty" @click="empty">清空</sapn>
+			</div>
+			<div class="list-content" ref="listContent">
+				<ul>
+					<li class="food" v-for="(food,index) in selectFoods" v-show="food.count>0">
+						<!-- {{food}} -->
+						<span class="name">{{food.name}}</span>
+						<div class="price" style="font-weight: 700">
+							<span>￥{{food.price*food.count}}</span>
+						</div>
+						<div class="cartcontrol-wrapper">
+							<cartcontrol :food="food"></cartcontrol>
+						</div>
+					</li>
+				</ul>
+			</div>
 	</div>	
-	</transition>					
+	</transition>
+	
 </div>
+
 
 </template>
 
 
 <script type = "text/ecmascript-6">
+import Vue from "Vue";
+import BScroll  from "better-scroll";
 import cartcontrol from "../../components/cartcontroll/cartcontroll";
 	export default {
 		props: {
@@ -114,6 +122,18 @@ import cartcontrol from "../../components/cartcontroll/cartcontroll";
 					return false;
 				}
 				let show = !this.fold;
+				if(show) {
+					this.$nextTick(() => {
+						if(!this.scroll){
+							this.scroll = new BScroll(this.$refs.listContent,{
+							click:true
+							});
+						}else{
+							this.scroll.refresh();
+						}
+						
+					});
+				}
 				return show;
 			}
 		},
@@ -126,6 +146,25 @@ import cartcontrol from "../../components/cartcontroll/cartcontroll";
 					return;
 				}
 				this.fold = !this.fold;
+			},
+			empty() {
+				// console.log('aaa');
+				this.selectFoods.forEach((food) => {
+					// food.count = 0;
+					Vue.delete(food, 'count');
+					Vue.set(food, 'count', 0);
+					// console.log(food);
+				});
+			},
+			hideList() {
+				this.fold = true;
+			},
+			pay() {
+				if(this.totalPrice<this.minPrice) {
+					return;
+				}
+				window.alert('支付￥'+this.totalPrice+'元');
+				
 			}
 		}
 	}
@@ -172,11 +211,10 @@ import cartcontrol from "../../components/cartcontroll/cartcontroll";
 .shopcart .shopcart-list {position: absolute;z-index: -1;width: 100%;left: 0;transform: translate3d(0,-100%,0);top: 0;}
 /*购物车渐入渐出效果*/
 .shopcart .fold-enter-active{transition: all 0.5s;}
-.shopcart .fold-leave-active{transition: all 3.3s;}
+.shopcart .fold-leave-active{transition: all 0.3s;}
 .shopcart .fold-enter{transform: translate3d(0,0,0);}
 .shopcart .fold-leave-to{transform: translate3d(0,0,0);}
-/*.shopcart .fold-enter-to, .fold-leave-to{-webkit-transform:  translate3d(0,0,0);transform: translate3d(0,0,0);}*/
-/*.shopcart   .fold-leave-to  {-webkit-transform:  translate(0,-100%);transform: translate(0,-100%);}*/
+
 
 
 
@@ -190,4 +228,11 @@ import cartcontrol from "../../components/cartcontroll/cartcontroll";
 .shopcart .shopcart-list .list-content .cartcontrol-wrapper {
 	position: absolute;right: 0;bottom: 0px;
 }
+
+/*购物车列表的背景层模糊效果*/
+.shopcart .list-mask {position: fixed;top: 0px;left: 0;width: 100%;height: 100%;z-index: -40;backdrop-filter:blur(10px); /*iPhone手机的模糊效果*/background-color: rgba(7,17,27,0.6);opacity: 1;}
+.shopcart .blur-enter-active{transition: all 0.5s;}
+.shopcart .blur-leave-active{transition: all 0.3s;}
+.shopcart .blur-enter{opacity: 0;}
+.shopcart .blur-leave-to{opacity: 0;}
 </style>
