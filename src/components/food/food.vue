@@ -1,6 +1,6 @@
 <template>
 
-<transition name="move">
+<transition name="move" >
 	<div v-show="showFlag" class="food" ref="food"> <!-- better-scroll绑在这个层上 -->
 	  	<div class="food-content">
 	  		<div class="image-header">
@@ -8,6 +8,7 @@
 	  			<div class="back" @click="hide()">
 	  				<span class="arrow">&lsaquo;</span>
 	  			</div>
+	  		</div>	
 		  		<div class="f-content">
 		  			<div class="title">{{food.name}}</div>
 		  			<div class="f-detail">
@@ -37,7 +38,6 @@
 					<ratingSelect :select-type="selectType" :only-content="onlyContent" :desc="desc" :ratings="food.ratings"></ratingSelect>
 		  		</div>
  			</div>
-	  	</div>
 	</div>
 </transition>
 </template>
@@ -52,7 +52,7 @@ import ratingSelect from "../../components/ratingSelect/ratingSelect";
 
 // const POSITIVE = 0;
 // const NEGATIVE = 1;
-const ALL = 2;
+const ALL = 2;      //给ratingselect组件active的效果
 	export default {
 		props: {
 			food: {
@@ -65,7 +65,7 @@ const ALL = 2;
 				selectType: ALL,
 				onlyContent: true,
 				desc: {
-					ALL: '全部',
+					all: '全部',
 					positive: '推荐',
 					negative: '吐槽'
 				}
@@ -77,14 +77,14 @@ const ALL = 2;
 				this.selectType = ALL;
 				this.onlyContent = true;
 				this.$nextTick(() => {
-					if(!this.scroll){
-						this.scroll = new BScroll(this.$refs.food,{
-							click : true
-						});
-					}else{
+						if(!this.scroll){
+							this.scroll = new BScroll(this.$refs.food,{
+							click:true
+							});
+						}else{
 							this.scroll.refresh();
 						}
-				});
+					});
 			},
 			hide() {
 				this.showFlag = false;
@@ -112,7 +112,7 @@ const ALL = 2;
 
 
 <style>
-.food {position:  fixed;left: 0;top: 0;bottom: 48px;z-index: 30;background: #fff;width: 100%;transform: translate3d(0,0,0);}
+.food {position:  fixed;left: 0;top: 0;padding-bottom: 48px;z-index: 30;background: #fff;width: 100%;height: 100%;transform: translate3d(0,0,0);}
 .move-enter-active, .move-leave-active {transition: all 0.2s linear;}
 .move-enter {transform: translate3d(100%,0,0);}
 .move-leave-to {transform: translate3d(100%,0,0);}
