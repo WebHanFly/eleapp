@@ -2,12 +2,12 @@
 
 	<div class="ratingSelect">
 	  	<div class="rating-type">
-	  		<span @click="select(2,$event)" class="block positive" :class="{'active':selectType===2}">{{desc.all}}<span class="count">47</span></span>
-	  		<span @click="select(0,$event)" class="block positive" :class="{'active':selectType===0}">{{desc.positive}}<span class="count">57</span></span>
-	  		<span @click="select(1,$event)" class="block nagetive" :class="{'active':selectType===1}">{{desc.negative}}<span class="count">27</span></span>
+	  		<span @click="select(2,$event)" class="block positive" :class="{'active':selectType===2}">{{desc.all}}<span class="count">{{ratings.length}}</span></span>
+	  		<span @click="select(0,$event)" class="block positive" :class="{'active':selectType===0}">{{desc.positive}}<span class="count">{{positives.length}}</span></span>
+	  		<span @click="select(1,$event)" class="block nagetive" :class="{'active':selectType===1}">{{desc.negative}}<span class="count">{{negatives.length}}</span></span>
 
 	  	</div>
-	  	<div @click="toggleContent()" class="switch" :class="{'on':onlyContent}">
+	  	<div @click="toggleContent($event)" class="switch" :class="{'on':onlyContent}">
 	  		<span class="circle"><span>&nbsp√</span></span>
 	  		<span class="text">只看内容的评价</span>
 	  	</div>
@@ -17,8 +17,8 @@
 
 
 <script type = "text/ecmascript-6">
-// const POSITIVE = 0;
-// const NEGATIVE = 1;
+const POSITIVE = 0;
+const NEGATIVE = 1;
 const ALL = 2;
 	export default {
 		props: {
@@ -52,16 +52,27 @@ const ALL = 2;
 				if(!event._constructed) {
 					return;
 				}
-				console.log(this.selectType);
-				this.selectType = type;
-				this.$dispatch('ratingtype.select',type); //父子组件的通讯。子组件告诉父组件变化。
+				this.$emit('increment',type);  //用来改变父组件监听selectType的值
+				// this.$dispatch('ratingtype.select',type); //父子组件的通讯。子组件告诉父组件变化。
 			},
-			toggleContent() {
+			toggleContent(event) {
 				if(!event._constructed) {
 					return;
 				}
 				this.onlyContent = !this.onlyContent;
-				this.$dispatch('content.toggle',this.onlyContent);
+				this.$emit('increment',this.onlyContent);
+			}
+		},
+		computed: {
+			positives() {
+				return this.ratings.filter((rating) => {
+					return rating.rateType === POSITIVE; // 0 => positive
+				})
+			},
+			negatives() {
+				return this.ratings.filter((rating) => {
+					return rating.rateType === NEGATIVE; // 0 => positive
+				})
 			}
 		}
 	}
@@ -80,7 +91,9 @@ const ALL = 2;
 .ratingSelect .rating-type .nagetive.active {background: rgba(77,85,93,1);}
 
 .ratingSelect .switch {padding: 12px 18px;line-height: 24px;border-bottom: 1px solid rgba(7,17,27,0.1);color: rgb(147,153,159);}
-.ratingSelect .switch .circle {background:rgba(0,160,220,1);border-radius: 50%; width: 16px;height: 16px;display: inline-block;position: relative;top: 3px;}
+.ratingSelect .switch .circle {background: rgba(77,85,93,0.2);border-radius: 50%; width: 16px;height: 16px;display: inline-block;position: relative;top: 3px;}
+.ratingSelect .on .circle {background:rgba(0,160,220,1);border-radius: 50%; width: 16px;height: 16px;display: inline-block;position: relative;top: 3px;}
+
 .ratingSelect .switch .circle span {font-size: 14px;margin-right: 4px;color: #fff;font-weight: bold;line-height: 6px;}
-.ratingSelect .switch .text {font-size: 12px;height: 140px;display: inline-block;}
+.ratingSelect .switch .text {font-size: 12px;/*height: 140px;display: inline-block;*/}
 </style>

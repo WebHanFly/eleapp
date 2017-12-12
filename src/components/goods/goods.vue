@@ -86,6 +86,7 @@ const ERR_OK = 0;
 						this._initScroll();
 						this._calculateHeight();
 						// this.selectFoods();
+						// console.log(this.listHeight);
 					})
 					
 				}
@@ -126,7 +127,7 @@ const ERR_OK = 0;
 					click:true
 				})
 				this.foodsScroll = new BScroll(this.$refs.foodsWrapper,{
-					// probeType:3,
+					probeType:3,  //probeType: 3,其作用就是实时获取y值，相当于探针的作用
 					click:true   //better-scroll点击事件开启，PC会算两侧，要传递event事件
 				}),
 				this.foodsScroll.on('scroll',(pos)=>{
@@ -145,8 +146,7 @@ const ERR_OK = 0;
 					let item = foodList[i];
 					height += item.clientHeight;
 					this.listHeight.push(height);
-				// console.log(listHeight);
-
+				// console.log(this.listHeight);
 				}
 			},
 			selectMenu(index,event) {

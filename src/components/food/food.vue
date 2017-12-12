@@ -35,7 +35,20 @@
 		  		<split></split>
 		  		<div class="rating">
 		  			<h1 class="title">商品评价</h1>
-					<ratingSelect :select-type="selectType" :only-content="onlyContent" :desc="desc" :ratings="food.ratings"></ratingSelect>
+					<ratingSelect :select-type="selectType" :only-content="onlyContent" :desc="desc" :ratings="food.ratings" v-on:increment="changeselectType" ></ratingSelect>
+					<div class="rating-wrapper">
+						<ul v-show="food.ratings && food.ratings.length">
+							<li class="rating-item" v-for="(rating,index) in food.ratings">
+								<div class="user">
+									<span class="name">{{rating.username}}</span>
+									<img :src="rating.avatar" width="12" height="12">
+								</div>
+								<div class="time">{{rating.rateTime}}</div>
+								<p class="text"><span :class="{'icon_up': rating.rateType === 0,'icon_down': rating.rateType === 1}">{{rating.text}}</span></p>
+							</li>
+						</ul>
+						<div class="norating" v-show="!food.ratings || !food.ratings.length"></div>
+					</div>
 		  		</div>
  			</div>
 	</div>
@@ -57,7 +70,8 @@ const ALL = 2;      //给ratingselect组件active的效果
 		props: {
 			food: {
 				type: Object
-			}
+			},
+			
 		},
 		data() {
 			return {
@@ -71,6 +85,11 @@ const ALL = 2;      //给ratingselect组件active的效果
 				}
 			}
 		},
+		// watch: {
+		// 	onlyContent(val) {
+		// 		this.myonlyContent = val;
+		// 	}
+		// },
 		methods: {
 			show() {    //被外部调用，不用'_' 私有的方法需要带下划线；
 				this.showFlag = true;
@@ -99,7 +118,22 @@ const ALL = 2;      //给ratingselect组件active的效果
 					Vue.set(this.food, 'count', 1);
 					// this.food.count = 1;
 				}
-			}
+			},
+			changeselectType(val) {    //v-on ：increment的监听事件
+				if(typeof(val) == "number"){
+					this.selectType = val;
+
+				}else{
+					this.onlyContent = val;
+					
+				}
+				
+			console.log(val);	
+			},
+			// changeselectContent(val) {
+			// 	this.onlyContent = val;
+			// 	// 
+			// }
 
 		},
 		components: {
@@ -112,7 +146,7 @@ const ALL = 2;      //给ratingselect组件active的效果
 
 
 <style>
-.food {position:  fixed;left: 0;top: 0;padding-bottom: 48px;z-index: 30;background: #fff;width: 100%;height: 100%;transform: translate3d(0,0,0);}
+.food {position:  fixed;left: 0;top: 0;bottom:0;padding-bottom: 48px;z-index: 30;background: #fff;width: 100%;height: 100%;transform: translate3d(0,0,0);}
 .move-enter-active, .move-leave-active {transition: all 0.2s linear;}
 .move-enter {transform: translate3d(100%,0,0);}
 .move-leave-to {transform: translate3d(100%,0,0);}
