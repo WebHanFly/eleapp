@@ -38,16 +38,16 @@
 					<ratingSelect :select-type="selectType" :only-content="onlyContent" :desc="desc" :ratings="food.ratings" v-on:increment="changeselectType" ></ratingSelect>
 					<div class="rating-wrapper">
 						<ul v-show="food.ratings && food.ratings.length">
-							<li class="rating-item" v-for="(rating,index) in food.ratings">
+							<li v-show="needShow(rating.ratingType,rating.text)" class="rating-item" v-for="(rating,index) in food.ratings">
 								<div class="user">
 									<span class="name">{{rating.username}}</span>
-									<img :src="rating.avatar" width="12" height="12">
+									<img :src="rating.avatar" width="12" height="12" class="avatar">
 								</div>
 								<div class="time">{{rating.rateTime}}</div>
-								<p class="text"><span :class="{'icon_up': rating.rateType === 0,'icon_down': rating.rateType === 1}">{{rating.text}}</span></p>
+								<p class="text"><span :class="{'icon_up': rating.rateType === 0,'icon_down': rating.rateType === 1}"></span>{{rating.text}}</p>
 							</li>
 						</ul>
-						<div class="norating" v-show="!food.ratings || !food.ratings.length"></div>
+						<div class="no-rating" v-show="!food.ratings || !food.ratings.length">暂无评价</div>
 					</div>
 		  		</div>
  			</div>
@@ -122,18 +122,31 @@ const ALL = 2;      //给ratingselect组件active的效果
 			changeselectType(val) {    //v-on ：increment的监听事件
 				if(typeof(val) == "number"){
 					this.selectType = val;
-
+					this.$nextTick(() => {
+						this.scroll.refresh();
+					})
 				}else{
 					this.onlyContent = val;
+					this.$nextTick(() => {
+						this.scroll.refresh();
+					})
 					
 				}
 				
-			console.log(val);	
+			// console.log(val);	
 			},
-			// changeselectContent(val) {
-			// 	this.onlyContent = val;
-			// 	// 
-			// }
+			needShow(type,text) {
+				if(this.onlyContent && !text) {
+					return false;
+				}
+				// console.log(this.selectType)
+				if(this.selectType === ALL) {
+					return true;
+				}else{
+					return type === this.selectType;
+				}
+			}
+			
 
 		},
 		components: {
@@ -187,4 +200,18 @@ const ALL = 2;      //给ratingselect组件active的效果
 .food .food-content  .info .text {color: rgb(77,85,93);line-height: 24px;padding: 0 8px;font-size: 12px;}
 .food .food-content .rating {padding-top: 18px;}
 .food .food-content .rating .title {line-height: 14px;margin-left: 18px;font-size: 14px;color: rgb(7,17,27);}
-</style>
+
+.food .food-content .rating-wrapper {height: 200px;padding: 0 18px;}
+.food .food-content .rating-wrapper .rating-item {position: relative;padding: 16px 0;border-bottom: 1px solid rgba(7,17,27,0.1);}
+.food .food-content .rating-wrapper .rating-item .user {position: absolute;top: 16px;line-height: 12px;font-size: 0;right: 0;}
+.food .food-content .rating-wrapper .rating-item .name {display: inline-block;vertical-align: top;font-size: 10px;color:rgb(147,153,159);margin-right: 6px;}
+.food .food-content .rating-wrapper .rating-item .avatar {border-radius: 50%;}
+.food .food-content .rating-wrapper .rating-item .time {margin-bottom: 6px;line-height: 12px;font-size: 10px;color:rgb(147,153,159); }
+.food .food-content .rating-wrapper .rating-item .text {line-height: 16px;font-size: 12px;color: #000;}
+/*.food .food-content .rating-wrapper .rating-item .text .icon_up, .icon_down{width: 12px;height: 12px;border-radius: 50%;}*/
+.food .food-content .rating-wrapper .rating-item .text .icon_up {width: 12px;height: 12px;border-radius: 50%;background: rgba(77,85,93,0.5);display: inline-block;margin-right: 8px;}
+.food .food-content .rating-wrapper .rating-item .text .icon_down {width: 12px;height: 12px;border-radius: 50%;background: rgba(0,160,220,0.5);display: inline-block;margin-right: 6px;}
+.food .food-content .rating-wrapper .rating-item .no-rating {
+	padding: 16px 0;
+}
+</style> 
