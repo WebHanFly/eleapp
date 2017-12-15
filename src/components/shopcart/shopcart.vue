@@ -31,12 +31,12 @@
 		<div class="shopcart-list" v-show="listShow">
 			<div class="list-header">
 				<div class="title">购物车</div>
-				<sapn class="empty" @click="empty">清空</sapn>
+				<span class="empty" @click="empty">清空</span>
 			</div>
 			<div class="list-content" ref="listContent">
 				<ul>
-					<li class="food" v-for="(food,index) in selectFoods" v-show="food.count>0">
-						<!-- {{food}} -->
+					<li class="food" v-for="(food,index) in selectFoods" v-show = "food.count>=0">
+						<!-- {{food.name}} -->
 						<span class="name">{{food.name}}</span>
 						<div class="price" style="font-weight: 700">
 							<span>￥{{food.price*food.count}}</span>
