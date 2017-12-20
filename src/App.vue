@@ -13,7 +13,9 @@
             </div>
               
         </div>
-        <router-view :seller="seller"></router-view> <!-- 传递数据 -->
+        <keep-alive>
+          <router-view :seller="seller" keep-alive></router-view> <!-- 传递数据 -->
+        </keep-alive>
     </div>
 </template>
 <script type = "text/ecmascript-6">
