@@ -79,6 +79,7 @@ const ERR_OK = 0;
 				myonlyContent:this.onlyContent
 			};
 		},
+		
 		created(){
 			this.$http.get('api/ratings').then((response) => {
 				response = response.body;

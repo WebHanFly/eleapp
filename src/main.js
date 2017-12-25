@@ -24,10 +24,11 @@ const router = new VueRouter({
 	routes,
 	linkActiveClass:'active'
 });
-router.push('/goods');
+// router.push('/goods');  //每次刷新都到goods首页
 const app = new Vue({
 	router
 }).$mount('#app');
+// router.go(0);
 
 new Vue({
   el: '#app',

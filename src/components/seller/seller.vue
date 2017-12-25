@@ -29,9 +29,9 @@
 					</div>
 				</li>
 			</ul>
-			<div class="favorite">
-				<span class="icon-shoucan" :class="{'active':favorite}"></span>
-				<span class="text">{{favorite}}</span>
+			<div class="favorite" @click="toggleFavorite">
+				<span class="icon-shoucan" :class="{'active':favorite}">❤</span>
+				<span class="text">{{favoriteText}}</span>
 			</div>
 		</div>
 		<split></split>
@@ -92,7 +92,7 @@ const ERR_OK = 0;
 		},
 		computed: {
 			favoriteText() {
-				return this.favorite ? '已收藏' : '未收藏';
+				return this.favorite ? '已收藏' : '收藏';
 			}
 		},
 		components: {
@@ -101,12 +101,14 @@ const ERR_OK = 0;
 		},
 		created() {
 			this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
-
 		},
 		watch: {
-			// console.log('qqq');
 			'seller'() {
-				this._initScroll();
+				this.$nextTick(() => {
+					this._initScroll();
+					})
+				this._initPics();
+				// console.log(this.seller.deliveryTime)
 			}
 		},
 		methods: {
@@ -118,6 +120,7 @@ const ERR_OK = 0;
 				}else{
 					this.scroll.refresh();
 				}
+				// console.log('111');
 			},
 			_initPics() {
 				if(this.seller.pics){
@@ -133,18 +136,20 @@ const ERR_OK = 0;
 						});
 					})
 				}
+			},
+			toggleFavorite(event) {
+				if(!event._constructed){
+					return;
+				}
+				this.favorite = !this.favorite;
 			}
 		},
 		mounted() { //dom渲染后执行
-			// console.log(this.seller);
 			// this.scroll =new BScroll(this.$refs.seller,{
 			// 	click: true
 			// }) 
 			this._initScroll();
-			// console.log('aaa');
 			this._initPics();
-
-			
 		}
 		
 	}
@@ -153,7 +158,7 @@ const ERR_OK = 0;
 
 <style>
 .seller {position: absolute;top: 174px;bottom: 0;width: 100%;left: 0;overflow: hidden;}
-.seller .overview {padding: 18px;}
+.seller .overview {padding: 18px;position: relative;}
 .seller .overview .title {margin-bottom: 8px;line-height: 14px;color: rgb(7,17,27);font-size: 14px;font-weight: 700;}
 .seller .overview .desc {padding-bottom: 18px;font-size: 0;border-bottom: 1px solid rgba(7,17,28,0.1);}
 .seller .overview  .desc .star {display: inline-block;margin-right: 8px;vertical-align: top;}
@@ -164,6 +169,13 @@ const ERR_OK = 0;
 .seller .overview .remark .block h2 {margin-bottom: 4px;line-height: 10px;font-size: 10px;color: rgb(147,153,159);font-weight: 700;}
 .seller .overview .remark .block .content {line-height: 24px;font-size: 10px;color: rgb(7,17,27);}
 .seller .overview .remark .block .content .stress {font-size: 24px;}
+
+
+.seller .overview .favorite {position: absolute;right: 11px;top: 18px;text-align: center;width: 50px;}
+.seller .overview .favorite .icon-shoucan {display: block;line-height: 24px;font-size: 24px;color: #d4d6d9;margin-bottom: 4px;}
+.seller .overview .favorite .icon-shoucan.active {color: rgb(240,20,20);}
+.seller .overview .favorite .text {line-height: 10px;font-size: 10px;color: rgb(77,89,93);}
+
 .seller .bulletin {padding: 18px 18px 0 18px;}
 .seller .bulletin .title {margin-bottom: 8px;line-height: 14px;color: rgb(7,17,27);font-size: 14px;font-weight: 700;}
 .seller .bulletin  .content-wrapper {padding: 16px 12px;border-bottom: 1px solid rgba(7,17,27,0.1)}
